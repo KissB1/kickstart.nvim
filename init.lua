@@ -627,7 +627,6 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
-
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
@@ -669,6 +668,21 @@ require('lazy').setup({
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
+          end,
+          zls = function()
+            local lspconfig = require 'lspconfig'
+            lspconfig.zls.setup {
+              root_dir = lspconfig.util.root_pattern('.git', 'build.zig', 'zls.json'),
+              settings = {
+                zls = {
+                  enable_inlay_hints = true,
+                  enable_snippets = true,
+                  warn_style = true,
+                },
+              },
+            }
+            vim.g.zig_fmt_parse_errors = 0
+            vim.g.zig_fmt_autosave = 0
           end,
         },
       }
